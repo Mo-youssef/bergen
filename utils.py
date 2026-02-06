@@ -36,7 +36,7 @@ def left_pad(sequence: torch.LongTensor, max_length: int, pad_value: int) -> tor
 # given a set of ids return field in dataset, if no field provided just return indexes
 def get_by_id(dataset, ids, field=None):
     # if single id is passed cast it to list
-    if not isinstance(ids, list):
+    if not isinstance(ids, list) and not isinstance(ids, datasets.arrow_dataset.Column):
         ids = [ids]
     idxs = [ dataset.id2index[id_] for id_ in ids if id_ in dataset.id2index]
     if field != None:

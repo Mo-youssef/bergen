@@ -239,6 +239,7 @@ class RAG:
             doc_ids,
             multi_doc=True, 
             query_field="content",
+            gen_query_field="generated_query",
             oracle_provenance=self.oracle_provenance
             )
 
@@ -431,7 +432,7 @@ class RAG:
             os.makedirs(self.processed_context_folder, exist_ok=True)
             with open(process_context_file, 'w') as fp: 
                 json.dump({"processed_contexts": processed_contexts,
-                           "context_metrics": str(context_metrics),
+                           "context_metrics": context_metrics,
                            "original_contexts": gen_dataset['doc'][:],
                            "generated_queries": gen_dataset['generated_query'][:], 
                            "queries": gen_dataset['query'][:]}, 
@@ -445,7 +446,7 @@ class RAG:
         gen_dataset = gen_dataset.add_column('doc', processed_contexts)
         shutil.copyfile(process_context_file, f'{self.experiment_folder}/{process_context_file.split("/")[-1]}')
         with open(f'{self.experiment_folder}/eval_{dataset_split}_context_metrics.json', 'w') as fout:
-            json.dump(str(context_metrics), fout)
+            json.dump(context_metrics, fout)
         return gen_dataset
     
     def generate(self, 
@@ -561,6 +562,7 @@ class RAG:
             query_ids, 
             doc_ids, 
             multi_doc=True, 
+            query_field="content",
             gen_query_field="generated_query",
             )
 
